@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+
+<!-- ========================================== -->
+<!-- ===== СКРЫТИЕ ОТ ПОИСКОВЫХ СИСТЕМ ===== -->
+<!-- ========================================== -->
+<!-- Запрещаем индексацию всеми поисковиками -->
+<meta name="robots" content="noindex, nofollow">
+<!-- Отдельно для Google -->
+<meta name="googlebot" content="noindex, nofollow">
+<!-- Отдельно для Яндекса -->
+<meta name="yandex" content="noindex, nofollow">
+
+<!-- ===== SEO ===== -->
+<title>Follow Me</title>
+<meta name="description" content="Ссылки на мои соцсети.">
+<meta name="theme-color" content="#000000">
+
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+  html, body {
+    width: 100%;
+    height: 100vh;
+    height: 100dvh;
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    overflow: hidden;
+    background: radial-gradient(circle at 50% 0%, #2a2a2a 0%, #111111 50%, #000000 100%);
+  }
+
+  body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+
+  /* ===== СЛОЙ ДЛЯ ЛЕТЯЩЕГО СНЕГА ===== */
+  .snow-layer {
+    position: fixed;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    overflow: hidden;
+  }
+
+  /* ===== СЛОЙ ДЛЯ СУГРОБА ===== */
+  .drift-layer {
+    position: fixed;
+    inset: 0;
+    z-index: 2;
+    pointer-events: none;
+    overflow: hidden;
+  }
+
+  /* ===== СНЕЖИНКА (летящая) ===== */
+  .snowflake {
+    position: absolute;
+    top: 0;
+    left: 0;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 30%, #ffffff 0%, #e0e0e0 40%, #888888 100%);
+    will-change: transform;
+    pointer-events: none;
+  }
+
+  /* Задний слой — мутный, меньше */
+  .snowflake.layer-back {
+    filter: blur(1.5px);
+    opacity: 0.6;
+  }
+
+  /* Средний слой */
+  .snowflake.layer-mid {
+    filter: blur(0.5px);
+    opacity: 0.85;
+  }
+
+  /* Передний слой — четкий, крупный */
+  .snowflake.layer-front {
+    filter: blur(0);
+    opacity: 1;
+  }
+
+  /* ===== СНЕЖИНКА В СУГРОБЕ ===== */
+  .drift-flake {
+    position: absolute;
+    top: 0;
+    left: 0;
+    border-radius: 50%;
+    background: radial-gradient(circle at 40% 30%, #6a6a6a 0%, #3a3a3a 60%, #1a1a1a 100%);
+    filter: blur(0.8px);
+    will-change: transform, opacity;
+    transition: transform 1.6s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+                opacity 1.6s ease;
+    pointer-events: none;
+  }
+
+  /* ===== ЗАГОЛОВОК ===== */
+  .title {
+    position: absolute;
+    top: calc(8% + env(safe-area-inset-top));
+    width: 100%;
+    text-align: center;
+    font-size: clamp(24px, 6vw, 42px);
+    font-weight: 900;
+    letter-spacing: 6px;
+    text-transform: uppercase;
+    color: #ffffff;
+    z-index: 5;
+    text-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+    animation: fadeIn 2s ease-out;
+  }
+  
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ===== ИКОНКИ СОЦСЕТЕЙ ===== */
+  .socials {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    justify-content: center;
+    padding: 20px;
+    z-index: 10;
+    position: relative;
+    max-width: 520px;
+  }
+
+  .social-btn {
+    position: relative;
+    width: 85px;
+    height: 85px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    text-decoration: none;
+    background: rgba(20, 20, 20, 0.7);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border: 1px solid rgba(255,255,255,0.15);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.6);
+    transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1),
+                box-shadow 0.4s ease,
+                border-color 0.4s ease,
+                background 0.4s ease;
+    overflow: visible;
+    isolation: isolate;
+  }
+
+  .social-btn svg {
+    width: 38px;
+    height: 38px;
+    fill: #ffffff;
+    transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1),
+                filter 0.4s ease;
+    z-index: 2;
+  }
+
+  .social-btn::before {
+    content: '';
+    position: absolute;
+    inset: -2px;
+    border-radius: 50%;
+    background: conic-gradient(from 0deg, transparent, rgba(255,255,255,0.4), transparent);
+    opacity: 0;
+    z-index: -2;
+    transition: opacity 0.4s ease;
+    filter: blur(10px);
+    animation: spin 4s linear infinite;
+  }
+
+  .social-btn:hover {
+    transform: translateY(-10px) scale(1.1);
+    border-color: rgba(255,255,255,0.6);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.8), 0 0 30px rgba(255,255,255,0.2);
+    background: rgba(40, 40, 40, 0.8);
+  }
+  
+  .social-btn:hover::before { opacity: 1; }
+  
+  .social-btn:hover svg {
+    transform: scale(1.15);
+    filter: drop-shadow(0 0 10px rgba(255,255,255,0.8));
+  }
+
+  .social-btn:active { transform: translateY(-4px) scale(0.95); }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .instagram:hover { box-shadow: 0 20px 40px rgba(0,0,0,0.8), 0 0 30px rgba(240, 148, 51, 0.4); }
+  .telegram:hover  { box-shadow: 0 20px 40px rgba(0,0,0,0.8), 0 0 30px rgba(0, 136, 204, 0.4); }
+  .vk:hover        { box-shadow: 0 20px 40px rgba(0,0,0,0.8), 0 0 30px rgba(0, 119, 255, 0.4); }
+  .youtube:hover   { box-shadow: 0 20px 40px rgba(0,0,0,0.8), 0 0 30px rgba(255, 0, 0, 0.4); }
+  .tiktok:hover    { box-shadow: 0 20px 40px rgba(0,0,0,0.8), 0 0 30px rgba(37, 244, 238, 0.4); }
+  .github:hover    { box-shadow: 0 20px 40px rgba(0,0,0,0.8), 0 0 30px rgba(255, 255, 255, 0.3); }
+
+  @media (max-width: 600px) {
+    .socials { max-width: 340px; gap: 16px; padding: 16px; }
+    .social-btn { width: 75px; height: 75px; }
+    .social-btn svg { width: 32px; height: 32px; }
+  }
+
+  @media (max-width: 380px) {
+    .socials { max-width: 290px; gap: 12px; }
+    .social-btn { width: 65px; height: 65px; }
+    .social-btn svg { width: 28px; height: 28px; }
+  }
+
+  @media (hover: none) {
+    .social-btn:hover {
+      transform: none;
+      background: rgba(20, 20, 20, 0.7);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.6);
+      border-color: rgba(255,255,255,0.15);
+    }
+    .social-btn:hover::before { opacity: 0; }
+    .social-btn:hover svg { transform: none; filter: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="snow-layer" id="snowLayer"></div>
+<div class="drift-layer" id="driftLayer"></div>
+
+<h1 class="title">Follow Me</h1>
+
+<div class="socials">
+  <a href="https://instagram.com/ВАШ_НИК" target="_blank" rel="noopener" class="social-btn instagram" aria-label="Instagram">
+    <svg viewBox="0 0 24 24"><path d="M7.8 2h8.4C19.4 2 22 4.6 22 7.8v8.4a5.8 5.8 0 0 1-5.8 5.8H7.8C4.6 22 2 19.4 2 16.2V7.8A5.8 5.8 0 0 1 7.8 2m-.2 2A3.6 3.6 0 0 0 4 7.6v8.8C4 18.39 5.61 20 7.6 20h8.8a3.6 3.6 0 0 0 3.6-3.6V7.6C20 5.61 18.39 4 16.4 4H7.6m9.65 1.5a1.25 1.25 0 0 1 1.25 1.25A1.25 1.25 0 0 1 17.25 8 1.25 1.25 0 0 1 16 6.75a1.25 1.25 0 0 1 1.25-1.25M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3z"/></svg>
+  </a>
+  <a href="https://t.me/ВАШ_НИК" target="_blank" rel="noopener" class="social-btn telegram" aria-label="Telegram">
+    <svg viewBox="0 0 24 24"><path d="M9.78 18.65l.28-4.23 7.68-6.92c.34-.31-.07-.46-.52-.19L7.74 13.3 3.64 12c-.88-.25-.89-.86.2-1.3l15.97-6.16c.73-.33 1.43.18 1.15 1.3l-2.72 12.81c-.19.91-.74 1.13-1.5.71L12.6 16.3l-1.99 1.93c-.23.23-.42.42-.83.42z"/></svg>
+  </a>
+  <a href="https://vk.com/ВАШ_НИК" target="_blank" rel="noopener" class="social-btn vk" aria-label="VK">
+    <svg viewBox="0 0 24 24"><path d="M12.785 16.241s.288-.032.436-.194c.136-.148.132-.427.132-.427s-.02-1.304.576-1.496c.588-.19 1.341 1.26 2.14 1.818.605.422 1.064.33 1.064.33l2.137-.03s1.117-.07.587-.95c-.043-.072-.308-.661-1.588-1.87-1.34-1.264-1.16-1.06.453-3.246.983-1.33 1.375-2.14 1.253-2.487-.117-.33-.84-.243-.84-.243l-2.405.015s-.178-.025-.31.055c-.13.078-.212.26-.212.26s-.383 1.03-.893 1.906c-1.076 1.846-1.507 1.944-1.682 1.83-.407-.266-.305-1.06-.305-1.63 0-1.77.268-2.51-.522-2.7-.262-.064-.454-.106-1.123-.113-.858-.01-1.583.003-1.994.207-.273.136-.484.44-.356.457.159.022.52.098.71.36.247.34.238 1.1.238 1.1s.142 2.08-.33 2.34c-.323.177-.767-.184-1.72-1.84-.488-.85-.857-1.79-.857-1.79s-.071-.176-.198-.27c-.154-.115-.37-.15-.37-.15l-2.286.014s-.343.01-.467.16c-.11.134-.009.41-.009.41s1.79 4.24 3.82 6.37c1.86 1.95 3.97 1.82 3.97 1.82h.96z"/></svg>
+  </a>
+  <a href="https://youtube.com/@ВАШ_КАНАЛ" target="_blank" rel="noopener" class="social-btn youtube" aria-label="YouTube">
+    <svg viewBox="0 0 24 24"><path d="M10 15l5.19-3L10 9v6m11.56-7.83c.13.47.22 1.1.28 1.9.07.8.1 1.49.1 2.09L22 12c0 2.19-.16 3.8-.44 4.83-.25.9-.83 1.48-1.73 1.73-.47.13-1.33.22-2.65.28-1.3.07-2.49.1-3.59.1L12 19c-4.19 0-6.8-.16-7.83-.44-.9-.25-1.48-.83-1.73-1.73-.13-.47-.22-1.1-.28-1.9-.07-.8-.1-1.49-.1-2.09L2 12c0-2.19.16-3.8.44-4.83.25-.9.83-1.48 1.73-1.73.47-.13 1.33-.22 2.65-.28 1.3-.07 2.49-.1 3.59-.1L12 5c4.19 0 6.8.16 7.83.44.9.25 1.48.83 1.73 1.73z"/></svg>
+  </a>
+  <a href="https://tiktok.com/@ВАШ_НИК" target="_blank" rel="noopener" class="social-btn tiktok" aria-label="TikTok">
+    <svg viewBox="0 0 24 24"><path d="M16.6 5.82s.51.5 0 0A4.278 4.278 0 0 1 15.54 3h-3.09v12.4a2.592 2.592 0 0 1-2.59 2.5c-1.42 0-2.6-1.16-2.6-2.6 0-1.72 1.66-3.01 3.37-2.48V9.66c-3.45-.46-6.47 2.22-6.47 5.64 0 3.33 2.76 5.7 5.69 5.7 3.14 0 5.69-2.55 5.69-5.7V9.01a7.35 7.35 0 0 0 4.3 1.38V7.3s-1.88.09-3.24-1.48z"/></svg>
+  </a>
+  <a href="https://github.com/ВАШ_НИК" target="_blank" rel="noopener" class="social-btn github" aria-label="GitHub">
+    <svg viewBox="0 0 24 24"><path d="M12 2A10 10 0 0 0 2 12c0 4.42 2.87 8.17 6.84 9.5.5.08.66-.23.66-.5v-1.69c-2.77.6-3.36-1.34-3.36-1.34-.46-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.87 1.52 2.34 1.07 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.92 0-1.11.38-2 1.03-2.71-.1-.25-.45-1.29.1-2.64 0 0 .84-.27 2.75 1.02.79-.22 1.65-.33 2.5-.33.85 0 1.71.11 2.5.33 1.91-1.29 2.75-1.02 2.75-1.02.55 1.35.2 2.39.1 2.64.65.71 1.03 1.6 1.03 2.71 0 3.82-2.34 4.66-4.57 4.91.36.31.69.92.69 1.85V21c0 .27.16.59.67.5C19.14 20.16 22 16.42 22 12A10 10 0 0 0 12 2z"/></svg>
+  </a>
+</div>
+
+<script>
+(function() {
+  'use strict';
+  
+  const snowLayer = document.getElementById('snowLayer');
+  const driftLayer = document.getElementById('driftLayer');
+  
+  const isMobile = window.innerWidth < 768;
+  const FLAKE_COUNT = isMobile ? 70 : 140;
+  
+  const flakes = [];
+  const driftFlakes = [];
+  
+  let windTime = 0;
+  let windDirection = 1;
+  let gustMultiplier = 1;
+  
+  function getWind() {
+    const baseWind = Math.sin(windTime * 0.001) * 0.5 * windDirection;
+    return baseWind * gustMultiplier;
+  }
+  
+  function createFlake(initial = false) {
+    const el = document.createElement('div');
+    el.className = 'snowflake';
+    
+    const layer = Math.floor(Math.random() * 3);
+    if (layer === 0) el.classList.add('layer-back');
+    else if (layer === 1) el.classList.add('layer-mid');
+    else el.classList.add('layer-front');
+    
+    const baseSize = layer === 0 ? 4 : layer === 1 ? 7 : 11;
+    const size = baseSize + Math.random() * (layer === 0 ? 3 : layer === 1 ? 5 : 8);
+    
+    const baseSpeed = layer === 0 ? 0.4 : layer === 1 ? 0.7 : 1.1;
+    const vy = baseSpeed + Math.random() * 0.4;
+    
+    const x = Math.random() * window.innerWidth;
+    const y = initial ? Math.random() * window.innerHeight : -size - Math.random() * 200;
+    
+    const flake = {
+      el: el,
+      x: x,
+      y: y,
+      size: size,
+      vy: vy,
+      layer: layer,
+      rotation: Math.random() * 360,
+      rotationSpeed: (Math.random() - 0.5) * 3,
+      swayPhase: Math.random() * Math.PI * 2,
+      swaySpeed: 0.01 + Math.random() * 0.02,
+      swayAmount: 0.5 + Math.random() * 1.5,
+      windOffset: Math.random() * 1000
+    };
+    
+    el.style.width = size + 'px';
+    el.style.height = size + 'px';
+    
+    flake.wrapX = function() {
+      const w = window.innerWidth;
+      if (this.x < -50) {
+        this.x = w + 50 - ((this.x + 50) % (w + 100));
+      } else if (this.x > w + 50) {
+        this.x = -50 + ((this.x - 50) % (w + 100));
+      }
+      if (!isFinite(this.x)) this.x = Math.random() * w;
+    };
+    
+    updateFlakeAppearance(flake, y / window.innerHeight);
+    el.style.transform = `translate(${x}px, ${y}px) rotate(${flake.rotation}deg)`;
+    
+    snowLayer.appendChild(el);
+    flakes.push(flake);
+  }
+  
+  function updateFlakeAppearance(flake, heightRatio) {
+    const r = Math.max(0, Math.min(1, heightRatio));
+    
+    let c1, c2, c3;
+    if (r < 0.33) {
+      c1 = '#ffffff';
+      c2 = '#e0e0e0';
+      c3 = '#999999';
+    } else if (r < 0.66) {
+      c1 = '#e0e0e0';
+      c2 = '#b0b0b0';
+      c3 = '#666666';
+    } else {
+      c1 = '#a0a0a0';
+      c2 = '#707070';
+      c3 = '#333333';
+    }
+    
+    flake.el.style.background = `radial-gradient(circle at 35% 30%, ${c1} 0%, ${c2} 40%, ${c3} 100%)`;
+  }
+  
+  function makeDriftFlake(f) {
+    f.el.remove();
+    
+    const drift = document.createElement('div');
+    drift.className = 'drift-flake';
+    
+    const w = f.size * (0.9 + Math.random() * 0.4);
+    const h = f.size * (0.5 + Math.random() * 0.2);
+    
+    drift.style.width = w + 'px';
+    drift.style.height = h + 'px';
+    
+    const driftHeight = Math.min(driftFlakes.length * 0.4, window.innerHeight * 0.06);
+    
+    const x = f.x;
+    const y = window.innerHeight - h - Math.random() * driftHeight;
+    
+    drift.style.transform = `translate(${x}px, ${y}px)`;
+    
+    const shade = 40 + Math.random() * 40;
+    drift.style.background = `radial-gradient(circle at 40% 30%, rgb(${shade + 30},${shade + 30},${shade + 30}) 0%, rgb(${shade},${shade},${shade}) 60%, rgb(${shade - 20},${shade - 20},${shade - 20}) 100%)`;
+    
+    driftLayer.appendChild(drift);
+    
+    driftFlakes.push({
+      el: drift,
+      x: x,
+      y: y,
+      size: w,
+      vx: 0,
+      vy: 0,
+      rotation: 0,
+      flying: false
+    });
+  }
+  
+  let lastTime = performance.now();
+  
+  function animate(currentTime) {
+    const delta = Math.min((currentTime - lastTime) / 16.67, 2.5);
+    lastTime = currentTime;
+    
+    windTime += delta * 16;
+    const wind = getWind();
+    
+    const screenHeight = window.innerHeight;
+    const groundY = screenHeight - 5;
+    
+    for (let i = flakes.length - 1; i >= 0; i--) {
+      const f = flakes[i];
+      
+      f.y += f.vy * delta;
+      
+      f.swayPhase += f.swaySpeed * delta;
+      const sway = Math.sin(f.swayPhase) * f.swayAmount;
+      f.x += (wind * (f.layer + 1) * 0.5 + sway) * delta;
+      
+      f.rotation += f.rotationSpeed * delta;
+      
+      f.wrapX();
+      
+      const heightRatio = f.y / screenHeight;
+      if (Math.floor(heightRatio * 10) !== Math.floor((f.y - f.vy * delta) / screenHeight * 10)) {
+        updateFlakeAppearance(f, heightRatio);
+      }
+      
+      f.el.style.transform = `translate(${f.x}px, ${f.y}px) rotate(${f.rotation}deg)`;
+      
+      if (f.y >= groundY) {
+        makeDriftFlake(f);
+        flakes.splice(i, 1);
+        createFlake();
+      }
+      
+      if (!isFinite(f.y) || !isFinite(f.x)) {
+        f.el.remove();
+        flakes.splice(i, 1);
+        createFlake();
+      }
+    }
+    
+    requestAnimationFrame(animate);
+  }
+  
+  function blowDrift() {
+    if (driftFlakes.length === 0) return;
+    
+    const direction = Math.random() > 0.5 ? 1 : -1;
+    const strength = 0.8 + Math.random() * 0.7;
+    
+    gustMultiplier = 3;
+    setTimeout(() => { gustMultiplier = 1; }, 2000);
+    
+    driftFlakes.forEach((d, index) => {
+      d.flying = true;
+      
+      const delay = index * 5 + Math.random() * 30;
+      
+      d.vx = direction * (5 + Math.random() * 8) * strength;
+      d.vy = -(3 + Math.random() * 6) * strength;
+      d.rotation = (Math.random() - 0.5) * 20;
+      
+      setTimeout(() => {
+        const endX = d.x + d.vx * 150 + (Math.random() - 0.5) * 200;
+        const endY = d.y + d.vy * 100 - Math.random() * 300;
+        const endRotation = (Math.random() - 0.5) * 900;
+        const endScale = 0.3 + Math.random() * 0.4;
+        
+        d.el.style.transform = `translate(${endX}px, ${endY}px) rotate(${endRotation}deg) scale(${endScale})`;
+        d.el.style.opacity = '0';
+        
+        setTimeout(() => {
+          d.el.remove();
+          const idx = driftFlakes.indexOf(d);
+          if (idx > -1) driftFlakes.splice(idx, 1);
+        }, 1600);
+      }, delay);
+    });
+  }
+  
+  for (let i = 0; i < FLAKE_COUNT; i++) {
+    createFlake(true);
+  }
+  
+  requestAnimationFrame(animate);
+  
+  function scheduleBlow() {
+    const delay = Math.random() * 8000 + 10000;
+    setTimeout(() => {
+      blowDrift();
+      scheduleBlow();
+    }, delay);
+  }
+  scheduleBlow();
+  
+  setInterval(() => {
+    windDirection *= -1;
+  }, 15000);
+  
+})();
+</script>
+
+</body>
+</html>
