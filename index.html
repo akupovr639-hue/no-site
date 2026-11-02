@@ -2,495 +2,679 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-
-<!-- ========================================== -->
-<!-- ===== СКРЫТИЕ ОТ ПОИСКОВЫХ СИСТЕМ ===== -->
-<!-- ========================================== -->
-<!-- Запрещаем индексацию всеми поисковиками -->
-<meta name="robots" content="noindex, nofollow">
-<!-- Отдельно для Google -->
-<meta name="googlebot" content="noindex, nofollow">
-<!-- Отдельно для Яндекса -->
-<meta name="yandex" content="noindex, nofollow">
-
-<!-- ===== SEO ===== -->
-<title>Follow Me</title>
-<meta name="description" content="Ссылки на мои соцсети.">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 <meta name="theme-color" content="#000000">
-
+<title>Happy New Year</title>
 <style>
-  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+/* --- БАЗА --- */
+* { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+html, body { width: 100%; height: 100vh; height: 100dvh; overflow: hidden; background: radial-gradient(ellipse at 50% -10%, #2b1206 0%, #140804 40%, #050201 80%, #000 100%); font-family: sans-serif; }
+body { display: flex; align-items: center; justify-content: center; position: relative; }
 
-  html, body {
-    width: 100%;
-    height: 100vh;
-    height: 100dvh;
-    font-family: 'Segoe UI', system-ui, sans-serif;
-    overflow: hidden;
-    background: radial-gradient(circle at 50% 0%, #2a2a2a 0%, #111111 50%, #000000 100%);
-  }
+/* --- ТЕПЛЫЙ СВЕТ ТОЛЬКО СВЕРХУ --- */
+.warm-glow {
+  position: fixed; inset: 0; z-index: 0; pointer-events: none;
+  background: radial-gradient(ellipse 70% 50% at 50% -5%, rgba(255, 130, 30, 0.4) 0%, transparent 70%);
+}
+.side-shadow {
+  position: fixed; inset: 0; z-index: 1; pointer-events: none;
+  background: radial-gradient(ellipse 80% 120% at 50% 50%, transparent 30%, rgba(10, 5, 2, 0.85) 100%);
+}
+.bottom-dark {
+  position: fixed; left: 0; right: 0; bottom: 0; height: 24vh; z-index: 4; pointer-events: none;
+  background: linear-gradient(to top, rgba(0,0,0,0.98) 0%, rgba(0,0,0,0.7) 35%, rgba(0,0,0,0.3) 70%, transparent 100%);
+}
 
-  body {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: relative;
-  }
+/* --- СЧЕТЧИК --- */
+.tap-counter {
+  position: fixed; top: 12px; left: 12px; z-index: 30; display: flex; align-items: center; gap: 6px;
+  padding: 5px 12px; background: rgba(20,15,10,.7); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255,200,120,.3); border-radius: 20px; font-family: 'Courier New', Courier, monospace;
+  font-size: 13px; font-weight: 700; color: rgba(255,200,120,.9); pointer-events: none; user-select: none;
+  box-shadow: 0 0 12px rgba(255,200,120,.15); transition: transform .15s ease, box-shadow .15s ease, color .15s ease, background .3s ease;
+  min-width: 56px;
+}
+.tap-counter.bump { transform: scale(1.18); box-shadow: 0 0 22px rgba(255,200,120,.6); color: #fff; }
+.tap-counter.done { color: #1a0f08; background: rgba(255,200,120,.95); box-shadow: 0 0 40px rgba(255,200,120,1); }
+.tap-icon { font-size: 13px; }
+.tap-num { min-width: 32px; text-align: right; font-variant-numeric: tabular-nums; }
 
-  /* ===== СЛОЙ ДЛЯ ЛЕТЯЩЕГО СНЕГА ===== */
-  .snow-layer {
-    position: fixed;
-    inset: 0;
-    z-index: 1;
-    pointer-events: none;
-    overflow: hidden;
-  }
+/* --- ПОДСКАЗКА --- */
+.tap-hint {
+  position: fixed; top: 44px; left: 12px; z-index: 30; display: inline-flex; align-items: center;
+  padding: 5px 10px; font-family: 'Courier New', Courier, monospace; font-size: 10px; font-weight: 700; letter-spacing: 1px;
+  color: #ffd700; background: rgba(20,15,10,.7); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255,200,120,.45); border-radius: 20px; pointer-events: none; user-select: none;
+  white-space: nowrap; box-shadow: 0 0 12px rgba(255,200,120,.25), inset 0 0 10px rgba(255,200,120,.08);
+  opacity: .9; animation: hintPulse 3s ease-in-out infinite;
+}
+@keyframes hintPulse {
+  0%, 100% { box-shadow: 0 0 12px rgba(255,200,120,.25), inset 0 0 10px rgba(255,200,120,.08); border-color: rgba(255,200,120,.45); color: #ffd700; }
+  50% { box-shadow: 0 0 22px rgba(255,200,120,.65), inset 0 0 14px rgba(255,200,120,.18); border-color: rgba(255,200,120,.9); color: #fff8e0; }
+}
+.tap-hint.urgent { animation: hintUrgent 1.2s ease-in-out infinite; color: #fff; }
+@keyframes hintUrgent {
+  0%, 100% { box-shadow: 0 0 15px rgba(255,200,120,.5); transform: scale(1); }
+  50% { box-shadow: 0 0 30px rgba(255,200,120,1), 0 0 50px rgba(255,180,80,.6); transform: scale(1.05); }
+}
 
-  /* ===== СЛОЙ ДЛЯ СУГРОБА ===== */
-  .drift-layer {
-    position: fixed;
-    inset: 0;
-    z-index: 2;
-    pointer-events: none;
-    overflow: hidden;
-  }
+/* --- ВСПЫШКА --- */
+.final-flash { position: fixed; inset: 0; background: #fff; z-index: 999; opacity: 0; pointer-events: none; transition: opacity .35s ease; }
+.final-flash.on { opacity: 1; }
 
-  /* ===== СНЕЖИНКА (летящая) ===== */
-  .snowflake {
-    position: absolute;
-    top: 0;
-    left: 0;
-    border-radius: 50%;
-    background: radial-gradient(circle at 35% 30%, #ffffff 0%, #e0e0e0 40%, #888888 100%);
-    will-change: transform;
-    pointer-events: none;
-  }
+/* --- СЕКРЕТНОЕ СООБЩЕНИЕ (ПАСХАЛКА) --- */
+.secret-message {
+  position: fixed;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%) scale(0.9);
+  background: rgba(20, 15, 10, 0.95);
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+  border: 2px solid rgba(255, 200, 120, 0.6);
+  border-radius: 16px;
+  padding: 20px 30px;
+  color: #ffd700;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: clamp(14px, 4vw, 24px);
+  font-weight: 700;
+  text-align: center;
+  z-index: 10000;
+  pointer-events: none;
+  opacity: 0;
+  box-shadow: 0 0 40px rgba(255, 200, 120, 0.4), inset 0 0 20px rgba(255, 200, 120, 0.2);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+  text-shadow: 0 0 10px rgba(255, 200, 120, 0.8);
+  width: max-content;
+  max-width: 90vw;
+  line-height: 1.5;
+}
+.secret-message.show {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+}
 
-  /* Задний слой — мутный, меньше */
-  .snowflake.layer-back {
-    filter: blur(1.5px);
-    opacity: 0.6;
-  }
+/* --- МОРЗЯНКА --- */
+.morse-easter {
+  position: absolute; top: calc(12% + 60px); left: 0; right: 0; text-align: center; z-index: 6;
+  cursor: text; user-select: text; -webkit-user-select: text; font-family: 'Courier New', Courier, monospace;
+  font-size: 13px; font-weight: 700; letter-spacing: 8px; color: rgba(255,255,255,.12); white-space: nowrap; padding: 6px 0;
+}
+.morse-easter::selection { background: rgba(255,200,120,.4); color: #fff; }
 
-  /* Средний слой */
-  .snowflake.layer-mid {
-    filter: blur(0.5px);
-    opacity: 0.85;
-  }
+/* --- СНЕГ --- */
+.snow-layer, .drift-layer { position: fixed; inset: 0; pointer-events: none; overflow: hidden; contain: layout paint; }
+.snow-layer { z-index: 2; }
+.drift-layer { z-index: 3; }
+.snowflake {
+  position: absolute; top: 0; left: 0; border-radius: 50%; will-change: transform; pointer-events: none;
+  display: flex; align-items: center; justify-content: center; color: rgba(255,240,220,.9); backface-visibility: hidden;
+}
+.snowflake.zone-0 { background: radial-gradient(circle at 35% 30%, #fff8e8 0%, #e8dcc8 40%, #a89070 100%); }
+.snowflake.zone-1 { background: radial-gradient(circle at 35% 30%, #e8dcc8 0%, #c8b8a0 40%, #806858 100%); }
+.snowflake.zone-2 { background: radial-gradient(circle at 35% 30%, #a89070 0%, #786050 40%, #3a2e22 100%); }
+.snowflake.star { background: none !important; box-shadow: none !important; text-shadow: 0 0 6px rgba(255,240,200,.9), 0 0 12px rgba(255,200,120,.6); line-height: 1; }
+.snowflake.star.lit { text-shadow: 0 0 10px rgba(255,240,200,1), 0 0 22px rgba(255,180,80,.9); }
+.layer-back { filter: blur(1.5px); opacity: .5; }
+.layer-mid { filter: blur(.5px); opacity: .8; }
+.layer-front { opacity: 1; }
+.drift-flake {
+  position: absolute; top: 0; left: 0; border-radius: 50%; background: radial-gradient(circle at 40% 30%, #4a5060, #252830 60%, #0a0c10);
+  filter: blur(.6px); will-change: transform, opacity; transition: transform 1.6s cubic-bezier(.25,.46,.45,.94), opacity 1.6s;
+  pointer-events: none; backface-visibility: hidden;
+}
 
-  /* Передний слой — четкий, крупный */
-  .snowflake.layer-front {
-    filter: blur(0);
-    opacity: 1;
-  }
+/* --- СОЦИАЛЬНЫЕ КНОПКИ --- */
+.socials { display: flex; gap: 28px; flex-wrap: wrap; justify-content: center; padding: 20px; z-index: 10; position: relative; max-width: 580px; }
+.social-btn {
+  position: relative; width: 88px; height: 88px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  cursor: pointer; text-decoration: none; background: rgba(20,15,10,.85); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
+  border: 2px solid rgba(180,140,90,.2); transition: transform .4s cubic-bezier(.34,1.56,.64,1), border-color .4s, box-shadow .4s;
+  overflow: visible; isolation: isolate; user-select: none; touch-action: manipulation;
+}
+.social-btn svg { width: 40px; height: 40px; fill: #aaa; transition: transform .5s cubic-bezier(.34,1.56,.64,1), filter .4s, fill .4s; z-index: 2; }
+.social-btn .glow-ring { position: absolute; inset: -6px; border-radius: 50%; background: radial-gradient(circle, rgba(255,200,120,.55), transparent 70%); opacity: 0; z-index: -1; pointer-events: none; transition: opacity .4s; filter: blur(8px); }
+.social-btn:hover, .social-btn.touch-hover { transform: translateY(-8px) scale(1.08); border-color: rgba(255,220,150,.95); box-shadow: 0 0 25px rgba(255,200,120,.8), 0 0 50px rgba(255,180,80,.5), inset 0 0 20px rgba(255,200,120,.3); }
+.social-btn:hover .glow-ring, .social-btn.touch-hover .glow-ring { opacity: 1; }
+.social-btn:hover svg, .social-btn.touch-hover svg { transform: scale(1.1); fill: #fff; filter: drop-shadow(0 0 10px #fff) drop-shadow(0 0 20px rgba(255,200,120,1)); }
 
-  /* ===== СНЕЖИНКА В СУГРОБЕ ===== */
-  .drift-flake {
-    position: absolute;
-    top: 0;
-    left: 0;
-    border-radius: 50%;
-    background: radial-gradient(circle at 40% 30%, #6a6a6a 0%, #3a3a3a 60%, #1a1a1a 100%);
-    filter: blur(0.8px);
-    will-change: transform, opacity;
-    transition: transform 1.6s cubic-bezier(0.25, 0.46, 0.45, 0.94),
-                opacity 1.6s ease;
-    pointer-events: none;
-  }
+/* --- TELEGRAM SHEET --- */
+.tg-sheet { position: fixed; inset: 0; z-index: 100; pointer-events: none; }
+.tg-sheet.open { pointer-events: auto; }
+.tg-sheet-backdrop { position: absolute; inset: 0; background: rgba(0,0,0,.7); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); opacity: 0; transition: opacity .3s ease; }
+.tg-sheet.open .tg-sheet-backdrop { opacity: 1; }
+.tg-sheet-content {
+  position: absolute; left: 0; right: 0; bottom: 0; max-width: 500px; margin: 0 auto;
+  padding: 10px 18px calc(18px + env(safe-area-inset-bottom, 0px));
+  background: linear-gradient(180deg, rgba(28,22,16,.98) 0%, rgba(12,8,4,.99) 100%);
+  border-top: 2px solid rgba(255,200,120,.35); border-radius: 24px 24px 0 0;
+  box-shadow: 0 -12px 50px rgba(0,0,0,.85), 0 0 40px rgba(255,200,120,.08);
+  transform: translateY(100%); transition: transform .42s cubic-bezier(.34,1.4,.64,1); will-change: transform; touch-action: pan-y;
+}
+.tg-sheet.open .tg-sheet-content { transform: translateY(0); }
+.tg-sheet.dragging .tg-sheet-content { transition: none; }
+.tg-sheet-handle { width: 44px; height: 4px; background: rgba(255,255,255,.18); border-radius: 2px; margin: 0 auto 14px; }
+.tg-sheet-title { font-size: 11px; color: rgba(255,200,120,.7); text-transform: uppercase; letter-spacing: 4px; font-weight: 800; text-align: center; margin-bottom: 16px; }
+.tg-sheet-item {
+  display: flex; align-items: center; gap: 14px; padding: 14px 16px; margin-bottom: 10px;
+  background: rgba(255,255,255,.04); border: 1.5px solid rgba(255,200,120,.15); border-radius: 16px;
+  text-decoration: none; color: #fff; transition: background .25s, border-color .25s, box-shadow .25s, transform .2s;
+}
+.tg-sheet-item:active { transform: scale(.98); background: rgba(255,200,120,.18); border-color: rgba(255,200,120,.6); box-shadow: 0 0 20px rgba(255,200,120,.25); }
+@media (hover: hover) {
+  .tg-sheet-item:hover { background: rgba(255,200,120,.12); border-color: rgba(255,200,120,.5); box-shadow: 0 0 22px rgba(255,200,120,.2); }
+  .tg-sheet-item:hover .tg-sheet-arrow { transform: translateX(4px); fill: rgba(255,200,120,1); }
+}
+.tg-sheet-num { width: 38px; height: 38px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; border-radius: 50%; background: linear-gradient(135deg, #29b6f6, #0088cc); box-shadow: 0 0 14px rgba(41,182,246,.45); font-weight: 800; font-size: 15px; color: #fff; }
+.tg-sheet-num.channel { background: linear-gradient(135deg, #fbbf24, #f59e0b); box-shadow: 0 0 14px rgba(251,191,36,.45); }
+.tg-sheet-num.bot { background: linear-gradient(135deg, #b86bff, #7d52d6); box-shadow: 0 0 14px rgba(184,107,255,.45); }
+.tg-sheet-num svg { width: 18px; height: 18px; fill: #fff; }
+.tg-sheet-label { flex: 1; font-size: 16px; font-weight: 600; letter-spacing: .4px; }
+.tg-sheet-arrow { width: 18px; height: 18px; fill: rgba(255,200,120,.45); flex-shrink: 0; transition: transform .25s, fill .25s; }
 
-  /* ===== ЗАГОЛОВОК ===== */
-  .title {
-    position: absolute;
-    top: calc(8% + env(safe-area-inset-top));
-    width: 100%;
-    text-align: center;
-    font-size: clamp(24px, 6vw, 42px);
-    font-weight: 900;
-    letter-spacing: 6px;
-    text-transform: uppercase;
-    color: #ffffff;
-    z-index: 5;
-    text-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
-    animation: fadeIn 2s ease-out;
-  }
+/* --- МОБИЛЬНАЯ АДАПТАЦИЯ --- */
+@media (max-width: 768px), (pointer: coarse) {
+  .tap-counter { top: calc(8px + env(safe-area-inset-top, 0)); left: 8px; font-size: 12px; padding: 4px 10px; min-width: 50px; }
+  .tap-hint { top: calc(38px + env(safe-area-inset-top, 0)); left: 8px; font-size: 9px; padding: 4px 8px; letter-spacing: .5px; }
+  .morse-easter { font-size: 10px; letter-spacing: 5px; top: calc(14% + 45px); color: rgba(255,255,255,.18); }
+  .social-btn { backdrop-filter: none; -webkit-backdrop-filter: none; background: rgba(30,20,15,.92); }
   
-  @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(-20px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-
-  /* ===== ИКОНКИ СОЦСЕТЕЙ ===== */
-  .socials {
-    display: flex;
-    gap: 20px;
-    flex-wrap: wrap;
-    justify-content: center;
-    padding: 20px;
-    z-index: 10;
-    position: relative;
-    max-width: 520px;
-  }
-
-  .social-btn {
-    position: relative;
-    width: 85px;
-    height: 85px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    text-decoration: none;
-    background: rgba(20, 20, 20, 0.7);
-    backdrop-filter: blur(15px);
-    -webkit-backdrop-filter: blur(15px);
-    border: 1px solid rgba(255,255,255,0.15);
-    box-shadow: 0 8px 32px rgba(0,0,0,0.6);
-    transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1),
-                box-shadow 0.4s ease,
-                border-color 0.4s ease,
-                background 0.4s ease;
-    overflow: visible;
-    isolation: isolate;
-  }
-
-  .social-btn svg {
-    width: 38px;
-    height: 38px;
-    fill: #ffffff;
-    transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1),
-                filter 0.4s ease;
-    z-index: 2;
-  }
-
-  .social-btn::before {
-    content: '';
-    position: absolute;
-    inset: -2px;
-    border-radius: 50%;
-    background: conic-gradient(from 0deg, transparent, rgba(255,255,255,0.4), transparent);
-    opacity: 0;
-    z-index: -2;
-    transition: opacity 0.4s ease;
-    filter: blur(10px);
-    animation: spin 4s linear infinite;
-  }
-
-  .social-btn:hover {
-    transform: translateY(-10px) scale(1.1);
-    border-color: rgba(255,255,255,0.6);
-    box-shadow: 0 20px 40px rgba(0,0,0,0.8), 0 0 30px rgba(255,255,255,0.2);
-    background: rgba(40, 40, 40, 0.8);
-  }
+  .socials { max-width: 100%; gap: 12px; padding: 10px; }
+  .social-btn { width: 64px; height: 64px; }
+  .social-btn svg { width: 28px; height: 28px; }
   
-  .social-btn:hover::before { opacity: 1; }
+  .social-btn:hover { transform: none; box-shadow: none; border-color: rgba(180,140,90,.2); }
+  .social-btn:hover .glow-ring { opacity: 0; }
+  .social-btn:hover svg { transform: none; fill: #aaa; filter: none; }
+  .social-btn.touch-hover { transform: scale(.98); border-color: rgba(255,220,150,.9); box-shadow: 0 0 20px rgba(255,200,120,.6), inset 0 0 15px rgba(255,200,120,.25); }
+  .social-btn.touch-hover .glow-ring { opacity: 1; }
+  .social-btn.touch-hover svg { fill: #fff; filter: drop-shadow(0 0 6px #fff) drop-shadow(0 0 12px rgba(255,200,120,.9)); }
+
+  .tg-sheet-content {
+    left: 12px; right: 12px; bottom: 12px;
+    border-radius: 20px;
+    padding: 8px 14px calc(14px + env(safe-area-inset-bottom, 0px));
+  }
+  .tg-sheet-handle { width: 36px; height: 3px; margin-bottom: 10px; }
+  .tg-sheet-title { font-size: 9px; margin-bottom: 10px; letter-spacing: 2px; }
+  .tg-sheet-item { padding: 10px 12px; margin-bottom: 6px; border-radius: 12px; gap: 10px; }
+  .tg-sheet-num { width: 28px; height: 28px; font-size: 12px; }
+  .tg-sheet-num svg { width: 14px; height: 14px; }
+  .tg-sheet-label { font-size: 13px; }
+  .tg-sheet-arrow { width: 14px; height: 14px; }
   
-  .social-btn:hover svg {
-    transform: scale(1.15);
-    filter: drop-shadow(0 0 10px rgba(255,255,255,0.8));
-  }
+  .secret-message { padding: 15px 20px; font-size: clamp(13px, 3.5vw, 18px); width: 85vw; }
+}
 
-  .social-btn:active { transform: translateY(-4px) scale(0.95); }
-
-  @keyframes spin { to { transform: rotate(360deg); } }
-
-  .instagram:hover { box-shadow: 0 20px 40px rgba(0,0,0,0.8), 0 0 30px rgba(240, 148, 51, 0.4); }
-  .telegram:hover  { box-shadow: 0 20px 40px rgba(0,0,0,0.8), 0 0 30px rgba(0, 136, 204, 0.4); }
-  .vk:hover        { box-shadow: 0 20px 40px rgba(0,0,0,0.8), 0 0 30px rgba(0, 119, 255, 0.4); }
-  .youtube:hover   { box-shadow: 0 20px 40px rgba(0,0,0,0.8), 0 0 30px rgba(255, 0, 0, 0.4); }
-  .tiktok:hover    { box-shadow: 0 20px 40px rgba(0,0,0,0.8), 0 0 30px rgba(37, 244, 238, 0.4); }
-  .github:hover    { box-shadow: 0 20px 40px rgba(0,0,0,0.8), 0 0 30px rgba(255, 255, 255, 0.3); }
-
-  @media (max-width: 600px) {
-    .socials { max-width: 340px; gap: 16px; padding: 16px; }
-    .social-btn { width: 75px; height: 75px; }
-    .social-btn svg { width: 32px; height: 32px; }
-  }
-
-  @media (max-width: 380px) {
-    .socials { max-width: 290px; gap: 12px; }
-    .social-btn { width: 65px; height: 65px; }
-    .social-btn svg { width: 28px; height: 28px; }
-  }
-
-  @media (hover: none) {
-    .social-btn:hover {
-      transform: none;
-      background: rgba(20, 20, 20, 0.7);
-      box-shadow: 0 8px 32px rgba(0,0,0,0.6);
-      border-color: rgba(255,255,255,0.15);
-    }
-    .social-btn:hover::before { opacity: 0; }
-    .social-btn:hover svg { transform: none; filter: none; }
-  }
+@media (max-width: 400px) {
+  .socials { gap: 8px; padding: 8px; }
+  .social-btn { width: 56px; height: 56px; }
+  .social-btn svg { width: 24px; height: 24px; }
+  .morse-easter { font-size: 9px; letter-spacing: 4px; top: calc(14% + 40px); }
+  .tap-hint { left: 8px; font-size: 8px; padding: 3px 7px; top: calc(36px + env(safe-area-inset-top, 0)); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .tap-counter, .tap-hint, .tap-hint.urgent, .tg-sheet-content, .tg-sheet-backdrop, .tg-sheet-item, .tg-sheet-arrow, .secret-message { animation: none !important; transition: none !important; transform: none !important; }
+}
 </style>
 </head>
 <body>
 
+<div class="tap-counter" id="tapCounter">
+  <span class="tap-icon">👆</span>
+  <span class="tap-num" id="tapNum">0</span>
+</div>
+<div class="tap-hint" id="tapHint">на 1000 — сюрприз 👀</div>
+<div class="final-flash" id="finalFlash"></div>
+
+<!-- ПАСХАЛКА -->
+<div class="secret-message" id="secretMsg">Создано рабом Эдгайя для нашего повелителя фури</div>
+
+<div class="warm-glow"></div>
+<div class="side-shadow"></div>
 <div class="snow-layer" id="snowLayer"></div>
 <div class="drift-layer" id="driftLayer"></div>
+<div class="bottom-dark"></div>
 
-<h1 class="title">Follow Me</h1>
+<div class="morse-easter" title="MrCaills">-- .-. -.-. .- .. .-.. .-.. ...</div>
 
 <div class="socials">
-  <a href="https://instagram.com/ВАШ_НИК" target="_blank" rel="noopener" class="social-btn instagram" aria-label="Instagram">
-    <svg viewBox="0 0 24 24"><path d="M7.8 2h8.4C19.4 2 22 4.6 22 7.8v8.4a5.8 5.8 0 0 1-5.8 5.8H7.8C4.6 22 2 19.4 2 16.2V7.8A5.8 5.8 0 0 1 7.8 2m-.2 2A3.6 3.6 0 0 0 4 7.6v8.8C4 18.39 5.61 20 7.6 20h8.8a3.6 3.6 0 0 0 3.6-3.6V7.6C20 5.61 18.39 4 16.4 4H7.6m9.65 1.5a1.25 1.25 0 0 1 1.25 1.25A1.25 1.25 0 0 1 17.25 8 1.25 1.25 0 0 1 16 6.75a1.25 1.25 0 0 1 1.25-1.25M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3z"/></svg>
-  </a>
-  <a href="https://t.me/ВАШ_НИК" target="_blank" rel="noopener" class="social-btn telegram" aria-label="Telegram">
-    <svg viewBox="0 0 24 24"><path d="M9.78 18.65l.28-4.23 7.68-6.92c.34-.31-.07-.46-.52-.19L7.74 13.3 3.64 12c-.88-.25-.89-.86.2-1.3l15.97-6.16c.73-.33 1.43.18 1.15 1.3l-2.72 12.81c-.19.91-.74 1.13-1.5.71L12.6 16.3l-1.99 1.93c-.23.23-.42.42-.83.42z"/></svg>
-  </a>
-  <a href="https://vk.com/ВАШ_НИК" target="_blank" rel="noopener" class="social-btn vk" aria-label="VK">
-    <svg viewBox="0 0 24 24"><path d="M12.785 16.241s.288-.032.436-.194c.136-.148.132-.427.132-.427s-.02-1.304.576-1.496c.588-.19 1.341 1.26 2.14 1.818.605.422 1.064.33 1.064.33l2.137-.03s1.117-.07.587-.95c-.043-.072-.308-.661-1.588-1.87-1.34-1.264-1.16-1.06.453-3.246.983-1.33 1.375-2.14 1.253-2.487-.117-.33-.84-.243-.84-.243l-2.405.015s-.178-.025-.31.055c-.13.078-.212.26-.212.26s-.383 1.03-.893 1.906c-1.076 1.846-1.507 1.944-1.682 1.83-.407-.266-.305-1.06-.305-1.63 0-1.77.268-2.51-.522-2.7-.262-.064-.454-.106-1.123-.113-.858-.01-1.583.003-1.994.207-.273.136-.484.44-.356.457.159.022.52.098.71.36.247.34.238 1.1.238 1.1s.142 2.08-.33 2.34c-.323.177-.767-.184-1.72-1.84-.488-.85-.857-1.79-.857-1.79s-.071-.176-.198-.27c-.154-.115-.37-.15-.37-.15l-2.286.014s-.343.01-.467.16c-.11.134-.009.41-.009.41s1.79 4.24 3.82 6.37c1.86 1.95 3.97 1.82 3.97 1.82h.96z"/></svg>
-  </a>
-  <a href="https://youtube.com/@ВАШ_КАНАЛ" target="_blank" rel="noopener" class="social-btn youtube" aria-label="YouTube">
-    <svg viewBox="0 0 24 24"><path d="M10 15l5.19-3L10 9v6m11.56-7.83c.13.47.22 1.1.28 1.9.07.8.1 1.49.1 2.09L22 12c0 2.19-.16 3.8-.44 4.83-.25.9-.83 1.48-1.73 1.73-.47.13-1.33.22-2.65.28-1.3.07-2.49.1-3.59.1L12 19c-4.19 0-6.8-.16-7.83-.44-.9-.25-1.48-.83-1.73-1.73-.13-.47-.22-1.1-.28-1.9-.07-.8-.1-1.49-.1-2.09L2 12c0-2.19.16-3.8.44-4.83.25-.9.83-1.48 1.73-1.73.47-.13 1.33-.22 2.65-.28 1.3-.07 2.49-.1 3.59-.1L12 5c4.19 0 6.8.16 7.83.44.9.25 1.48.83 1.73 1.73z"/></svg>
-  </a>
-  <a href="https://tiktok.com/@ВАШ_НИК" target="_blank" rel="noopener" class="social-btn tiktok" aria-label="TikTok">
-    <svg viewBox="0 0 24 24"><path d="M16.6 5.82s.51.5 0 0A4.278 4.278 0 0 1 15.54 3h-3.09v12.4a2.592 2.592 0 0 1-2.59 2.5c-1.42 0-2.6-1.16-2.6-2.6 0-1.72 1.66-3.01 3.37-2.48V9.66c-3.45-.46-6.47 2.22-6.47 5.64 0 3.33 2.76 5.7 5.69 5.7 3.14 0 5.69-2.55 5.69-5.7V9.01a7.35 7.35 0 0 0 4.3 1.38V7.3s-1.88.09-3.24-1.48z"/></svg>
-  </a>
-  <a href="https://github.com/ВАШ_НИК" target="_blank" rel="noopener" class="social-btn github" aria-label="GitHub">
-    <svg viewBox="0 0 24 24"><path d="M12 2A10 10 0 0 0 2 12c0 4.42 2.87 8.17 6.84 9.5.5.08.66-.23.66-.5v-1.69c-2.77.6-3.36-1.34-3.36-1.34-.46-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.87 1.52 2.34 1.07 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.92 0-1.11.38-2 1.03-2.71-.1-.25-.45-1.29.1-2.64 0 0 .84-.27 2.75 1.02.79-.22 1.65-.33 2.5-.33.85 0 1.71.11 2.5.33 1.91-1.29 2.75-1.02 2.75-1.02.55 1.35.2 2.39.1 2.64.65.71 1.03 1.6 1.03 2.71 0 3.82-2.34 4.66-4.57 4.91.36.31.69.92.69 1.85V21c0 .27.16.59.67.5C19.14 20.16 22 16.42 22 12A10 10 0 0 0 12 2z"/></svg>
-  </a>
+  <a href="https://steamcommunity.com/profiles/76561198681477327/" target="_blank" rel="noopener" aria-label="Steam" class="social-btn"><div class="glow-ring"></div><svg viewBox="0 0 24 24"><path d="M11.979 0C5.678 0 .511 4.86.022 11.037l6.432 2.658c.545-.371 1.203-.59 1.912-.59.063 0 .125.004.188.006l2.861-4.142V8.91c0-2.495 2.028-4.524 4.524-4.524 2.494 0 4.524 2.031 4.524 4.527s-2.03 4.525-4.524 4.525h-.105l-4.076 2.911c0 .052.004.105.004.159 0 1.875-1.515 3.396-3.39 3.396-1.635 0-3.016-1.173-3.331-2.727L.436 15.27C1.862 20.307 6.486 24 11.979 24c6.627 0 11.999-5.373 11.999-12S18.605 0 11.979 0zM7.54 18.21l-1.473-.61c.262.543.714.999 1.314 1.25 1.297.539 2.793-.076 3.332-1.375.263-.63.264-1.319.005-1.949s-.75-1.121-1.377-1.383c-.624-.26-1.29-.249-1.878-.03l1.523.63c.956.4 1.409 1.5 1.009 2.455-.397.957-1.497 1.41-2.454 1.012H7.54zm11.415-9.303c0-1.662-1.353-3.015-3.015-3.015-1.665 0-3.015 1.353-3.015 3.015 0 1.665 1.35 3.015 3.015 3.015 1.663 0 3.015-1.35 3.015-3.015zm-5.273-.005c0-1.252 1.013-2.266 2.265-2.266 1.249 0 2.266 1.014 2.266 2.266 0 1.251-1.017 2.265-2.266 2.265-1.253 0-2.265-1.014-2.265-2.265z"/></svg></a>
+  <a href="https://discord.gg/Zg7HDXku" target="_blank" rel="noopener" aria-label="Discord" class="social-btn"><div class="glow-ring"></div><svg viewBox="0 0 24 24"><path d="M20.317 4.3698a19.7913 19.7913 0 00-4.8851-1.5152.0741.0741 0 00-.0785.0371c-.211.3753-.4447.8648-.6083 1.2495-1.8447-.2762-3.68-.2762-5.4868 0-.1636-.3933-.4058-.8742-.6177-1.2495a.077.077 0 00-.0785-.037 19.7363 19.7363 0 00-4.8852 1.515.0699.0699 0 00-.0321.0277C.5334 9.0458-.319 13.5799.0992 18.0578a.0824.0824 0 00.0312.0561c2.0528 1.5076 4.0413 2.4228 5.9929 3.0294a.0777.0777 0 00.0842-.0276c.4616-.6304.8731-1.2952 1.226-1.9942a.076.076 0 00-.0416-.1057c-.6528-.2476-1.2743-.5495-1.8722-.8923a.077.077 0 01-.0076-.1277c.1258-.0943.2517-.1923.3718-.2914a.0743.0743 0 01.0776-.0105c3.9278 1.7933 8.18 1.7933 12.0614 0a.0739.0739 0 01.0785.0095c.1202.099.246.1981.3728.2924a.077.077 0 01-.0066.1276 12.2986 12.2986 0 01-1.873.8914.0766.0766 0 00-.0407.1067c.3604.698.7719 1.3628 1.225 1.9932a.076.076 0 00.0842.0286c1.961-.6067 3.9495-1.5219 6.0023-3.0294a.077.077 0 00.0313-.0552c.5004-5.177-.8382-9.6739-3.5485-13.6604a.061.061 0 00-.0312-.0286zM8.02 15.3312c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9555-2.4189 2.157-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.9555 2.4189-2.1569 2.4189zm7.9748 0c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9554-2.4189 2.1569-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.946 2.4189-2.1568 2.4189Z"/></svg></a>
+  <a href="#" aria-label="Telegram" class="social-btn" id="tgBtn"><div class="glow-ring"></div><svg viewBox="0 0 24 24"><path d="M9.78 18.65l.28-4.23 7.68-6.92c.34-.31-.07-.46-.52-.19L7.74 13.3 3.64 12c-.88-.25-.89-.86.2-1.3l15.97-6.16c.73-.33 1.43.18 1.15 1.3l-2.72 12.81c-.19.91-.74 1.13-1.5.71L12.6 16.3l-1.99 1.93c-.23.23-.42.42-.83.42z"/></svg></a>
+  <a href="https://open.spotify.com/user/31acjutreu4nidifw7we422fzs7i?si=a693cb197f9744be" target="_blank" rel="noopener" aria-label="Spotify" class="social-btn"><div class="glow-ring"></div><svg viewBox="0 0 24 24"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/></svg></a>
+</div>
+
+<div class="tg-sheet" id="tgSheet" aria-hidden="true">
+  <div class="tg-sheet-backdrop" data-tg-close></div>
+  <div class="tg-sheet-content" role="dialog" aria-label="Telegram">
+    <div class="tg-sheet-handle"></div>
+    <div class="tg-sheet-title">Telegram</div>
+    <a href="https://t.me/logoadvisory" target="_blank" rel="noopener" class="tg-sheet-item">
+      <span class="tg-sheet-num">1</span>
+      <span class="tg-sheet-label">1 акк · @logoadvisory</span>
+      <svg class="tg-sheet-arrow" viewBox="0 0 24 24"><path d="M8.59 16.59 13.17 12 8.59 7.41 10 6l6 6-6 6z"/></svg>
+    </a>
+    <a href="https://t.me/mutuallyedguy_bot" target="_blank" rel="noopener" class="tg-sheet-item">
+      <span class="tg-sheet-num bot">
+        <svg viewBox="0 0 24 24"><path d="M12 2a2 2 0 012 2c0 .74-.4 1.39-1 1.73V7h1a7 7 0 017 7h1a1 1 0 011 1v3a1 1 0 01-1 1h-1v1a2 2 0 01-2 2H5a2 2 0 01-2-2v-1H2a1 1 0 01-1-1v-3a1 1 0 011-1h1a7 7 0 017-7h1V5.73c-.6-.34-1-.99-1-1.73a2 2 0 012-2M7.5 13a2.5 2.5 0 00-2.5 2.5 2.5 2.5 0 002.5 2.5 2.5 2.5 0 002.5-2.5 2.5 2.5 0 00-2.5-2.5m9 0a2.5 2.5 0 00-2.5 2.5 2.5 2.5 0 002.5 2.5 2.5 2.5 0 002.5-2.5 2.5 2.5 0 00-2.5-2.5z"/></svg>
+      </span>
+      <span class="tg-sheet-label">2 акк · бот аноним (Start)</span>
+      <svg class="tg-sheet-arrow" viewBox="0 0 24 24"><path d="M8.59 16.59 13.17 12 8.59 7.41 10 6l6 6-6 6z"/></svg>
+    </a>
+    <a href="https://t.me/uglylogo" target="_blank" rel="noopener" class="tg-sheet-item">
+      <span class="tg-sheet-num channel"><svg viewBox="0 0 24 24"><path d="M14 6l-1-2H5v17h2v-7h5l1 2h7V6h-6z"/></svg></span>
+      <span class="tg-sheet-label">Канал · @uglylogo</span>
+      <svg class="tg-sheet-arrow" viewBox="0 0 24 24"><path d="M8.59 16.59 13.17 12 8.59 7.41 10 6l6 6-6 6z"/></svg>
+    </a>
+  </div>
 </div>
 
 <script>
-(function() {
-  'use strict';
-  
-  const snowLayer = document.getElementById('snowLayer');
-  const driftLayer = document.getElementById('driftLayer');
-  
-  const isMobile = window.innerWidth < 768;
-  const FLAKE_COUNT = isMobile ? 70 : 140;
-  
-  const flakes = [];
-  const driftFlakes = [];
-  
-  let windTime = 0;
-  let windDirection = 1;
-  let gustMultiplier = 1;
-  
-  function getWind() {
-    const baseWind = Math.sin(windTime * 0.001) * 0.5 * windDirection;
-    return baseWind * gustMultiplier;
+(function(){
+'use strict';
+
+var ZONES = ['zone-0', 'zone-1', 'zone-2'];
+var W = 0, H = 0, H3 = 0, H2_3 = 0;
+var isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+
+function updateDims(){
+  W = window.innerWidth || document.documentElement.clientWidth;
+  H = window.innerHeight || document.documentElement.clientHeight;
+  H3 = H * 0.33;
+  H2_3 = H * 0.66;
+}
+updateDims();
+
+var sl = document.getElementById('snowLayer');
+var dl = document.getElementById('driftLayer');
+var btns = document.querySelectorAll('.social-btn');
+var tgBtn = document.getElementById('tgBtn');
+var tgSheet = document.getElementById('tgSheet');
+var tgContent = tgSheet.querySelector('.tg-sheet-content');
+
+/* --- ИНТЕРАКТИВ КНОПОК И СНЕГА --- */
+var icons = [], iconsReady = false;
+var iMinX = 1e9, iMaxX = -1e9, iMinY = 1e9, iMaxY = -1e9;
+var hoverCount = 0;
+
+function updIcons(){
+  icons = [];
+  iMinX = 1e9; iMaxX = -1e9; iMinY = 1e9; iMaxY = -1e9;
+  var half = Math.ceil(btns.length / 2);
+  var rad = W < 768 ? 90 : 120;
+  var rad2 = rad * rad;
+  for(var k = 0; k < btns.length; k++){
+    var r = btns[k].getBoundingClientRect();
+    var cx = r.left + r.width / 2, cy = r.top + r.height / 2;
+    icons.push({cx: cx, cy: cy, r: rad, r2: rad2, top: k < half, hover: false});
+    if(cx - rad < iMinX) iMinX = cx - rad;
+    if(cx + rad > iMaxX) iMaxX = cx + rad;
+    if(cy - rad < iMinY) iMinY = cy - rad;
+    if(cy + rad > iMaxY) iMaxY = cy + rad;
   }
+  hoverCount = 0;
+  iconsReady = true;
+}
+
+function setHover(idx, val){
+  var ic = icons[idx];
+  if(!ic) return;
+  if(ic.hover !== val){
+    ic.hover = val;
+    if(val) hoverCount++; else hoverCount--;
+  }
+}
+
+setTimeout(updIcons, 100);
+var rT = null;
+window.addEventListener('resize', function(){
+  if(rT) clearTimeout(rT);
+  rT = setTimeout(function(){ updateDims(); updIcons(); }, 180);
+});
+
+for(var k = 0; k < btns.length; k++){
+  (function(btn, idx){
+    if(isTouch){
+      btn.addEventListener('touchstart', function(){
+        for(var j = 0; j < icons.length; j++) if(j !== idx) setHover(j, false);
+        setHover(idx, true);
+        btn.classList.add('touch-hover');
+      }, {passive: true});
+      btn.addEventListener('touchend', function(){
+        setTimeout(function(){ setHover(idx, false); btn.classList.remove('touch-hover'); }, 350);
+      }, {passive: true});
+      btn.addEventListener('touchcancel', function(){
+        setHover(idx, false); btn.classList.remove('touch-hover');
+      }, {passive: true});
+    } else {
+      btn.addEventListener('mouseenter', function(){ setHover(idx, true); });
+      btn.addEventListener('mouseleave', function(){ setHover(idx, false); });
+    }
+  })(btns[k], k);
+}
+
+/* --- TELEGRAM SHEET --- */
+function openTg(){ if(tgSheet.classList.contains('open')) return; tgSheet.classList.add('open'); tgSheet.setAttribute('aria-hidden', 'false'); }
+function closeTg(){ if(!tgSheet.classList.contains('open')) return; tgSheet.classList.remove('open'); tgSheet.setAttribute('aria-hidden', 'true'); }
+
+tgBtn.addEventListener('click', function(e){ e.preventDefault(); openTg(); });
+tgSheet.querySelector('[data-tg-close]').addEventListener('click', closeTg);
+
+var tgItems = tgSheet.querySelectorAll('.tg-sheet-item');
+for(var ti = 0; ti < tgItems.length; ti++){
+  tgItems[ti].addEventListener('click', function(){ setTimeout(closeTg, 120); });
+}
+document.addEventListener('keydown', function(e){ if(e.key === 'Escape') closeTg(); });
+
+(function(){
+  var startY = 0, currentY = 0, dragging = false, startTime = 0;
+  var threshold = 100;
+
+  function onStart(y){
+    if(!tgSheet.classList.contains('open')) return;
+    startY = y; currentY = y; dragging = true; startTime = Date.now();
+    tgSheet.classList.add('dragging');
+  }
+  function onMove(y){
+    if(!dragging) return;
+    currentY = y;
+    var d = currentY - startY;
+    if(d < 0) d = 0;
+    tgContent.style.transform = 'translateY(' + d + 'px)';
+  }
+  function onEnd(){
+    if(!dragging) return;
+    dragging = false;
+    tgSheet.classList.remove('dragging');
+    var d = currentY - startY;
+    var dt = Date.now() - startTime || 1;
+    tgContent.style.transform = '';
+    if(d > threshold || d / dt > 0.5) closeTg();
+  }
+
+  tgContent.addEventListener('touchstart', function(e){ onStart(e.touches[0].clientY); }, {passive: true});
+  tgContent.addEventListener('touchmove', function(e){ onMove(e.touches[0].clientY); }, {passive: true});
+  tgContent.addEventListener('touchend', onEnd, {passive: true});
+  tgContent.addEventListener('touchcancel', onEnd, {passive: true});
+  tgContent.addEventListener('mousedown', function(e){ if(e.target.closest && e.target.closest('.tg-sheet-item')) return; onStart(e.clientY); });
+  document.addEventListener('mousemove', function(e){ onMove(e.clientY); });
+  document.addEventListener('mouseup', onEnd);
+})();
+
+/* --- СЧЕТЧИК КЛИКОВ И ПАСХАЛКА --- */
+(function(){
+  var tapCount = 0;
+  var tapNum = document.getElementById('tapNum');
+  var tapWrap = document.getElementById('tapCounter');
+  var tapHint = document.getElementById('tapHint');
+  var flash = document.getElementById('finalFlash');
+  var secretMsg = document.getElementById('secretMsg');
   
-  function createFlake(initial = false) {
-    const el = document.createElement('div');
+  var bumpTimer = null;
+  var reloading = false;
+  var LIMIT = 1000;
+  var URGENT_FROM = 960;
+  var urgentShown = false;
+  
+  // Генерируем случайное число от 50 до 949. На этом клике выпадет пасхалка.
+  var eggTarget = Math.floor(Math.random() * 900) + 50; 
+  var eggShown = false;
+  var eggTimeout = null;
+
+  function onTap(e){
+    if(reloading) return;
+    if(e.target.closest && e.target.closest('.tg-sheet-content')) return;
+    // Игнорируем правую и среднюю кнопку мыши на ПК
+    if(e.pointerType === 'mouse' && e.button !== 0) return;
+
+    tapCount++;
+    tapNum.textContent = tapCount;
+    tapWrap.classList.add('bump');
+    clearTimeout(bumpTimer);
+    bumpTimer = setTimeout(function(){ tapWrap.classList.remove('bump'); }, 150);
+
+    // Логика пасхалки: 1 раз за 1000 кликов (на случайном клике)
+    if(tapCount === eggTarget && !eggShown){
+      eggShown = true;
+      secretMsg.classList.add('show');
+      
+      if(eggTimeout) clearTimeout(eggTimeout);
+      eggTimeout = setTimeout(function(){
+        secretMsg.classList.remove('show');
+      }, 10000); // 10 секунд
+    }
+
+    if(tapCount >= URGENT_FROM && !urgentShown){
+      urgentShown = true;
+      tapHint.classList.add('urgent');
+    }
+
+    if(tapCount >= LIMIT){
+      reloading = true;
+      tapWrap.classList.add('done');
+      tapHint.textContent = 'готово ✨';
+      setTimeout(function(){ flash.classList.add('on'); }, 50);
+      setTimeout(function(){ location.reload(); }, 450);
+    }
+  }
+  document.addEventListener('pointerdown', onTap, {passive: true});
+})();
+
+/* --- СНЕГ И ФИЗИКА --- */
+(function(){
+  var isMobile = W < 768 || isTouch;
+  var C = isMobile ? 50 : 130;
+  var fl = [], dr = [];
+  var wt = 0, wd = 1, gm = 1, gb = 0, gbd = 1;
+  var frameCount = 0;
+  var INV_DT = 1 / 16.67;
+
+  function mk(init){
+    var el = document.createElement('div');
     el.className = 'snowflake';
-    
-    const layer = Math.floor(Math.random() * 3);
-    if (layer === 0) el.classList.add('layer-back');
-    else if (layer === 1) el.classList.add('layer-mid');
+    var L = Math.random() < .5 ? 0 : Math.random() < .8 ? 1 : 2;
+    if(L === 0) el.classList.add('layer-back');
+    else if(L === 1) el.classList.add('layer-mid');
     else el.classList.add('layer-front');
     
-    const baseSize = layer === 0 ? 4 : layer === 1 ? 7 : 11;
-    const size = baseSize + Math.random() * (layer === 0 ? 3 : layer === 1 ? 5 : 8);
-    
-    const baseSpeed = layer === 0 ? 0.4 : layer === 1 ? 0.7 : 1.1;
-    const vy = baseSpeed + Math.random() * 0.4;
-    
-    const x = Math.random() * window.innerWidth;
-    const y = initial ? Math.random() * window.innerHeight : -size - Math.random() * 200;
-    
-    const flake = {
-      el: el,
-      x: x,
-      y: y,
-      size: size,
-      vy: vy,
-      layer: layer,
-      rotation: Math.random() * 360,
-      rotationSpeed: (Math.random() - 0.5) * 3,
-      swayPhase: Math.random() * Math.PI * 2,
-      swaySpeed: 0.01 + Math.random() * 0.02,
-      swayAmount: 0.5 + Math.random() * 1.5,
-      windOffset: Math.random() * 1000
-    };
-    
-    el.style.width = size + 'px';
-    el.style.height = size + 'px';
-    
-    flake.wrapX = function() {
-      const w = window.innerWidth;
-      if (this.x < -50) {
-        this.x = w + 50 - ((this.x + 50) % (w + 100));
-      } else if (this.x > w + 50) {
-        this.x = -50 + ((this.x - 50) % (w + 100));
-      }
-      if (!isFinite(this.x)) this.x = Math.random() * w;
-    };
-    
-    updateFlakeAppearance(flake, y / window.innerHeight);
-    el.style.transform = `translate(${x}px, ${y}px) rotate(${flake.rotation}deg)`;
-    
-    snowLayer.appendChild(el);
-    flakes.push(flake);
-  }
-  
-  function updateFlakeAppearance(flake, heightRatio) {
-    const r = Math.max(0, Math.min(1, heightRatio));
-    
-    let c1, c2, c3;
-    if (r < 0.33) {
-      c1 = '#ffffff';
-      c2 = '#e0e0e0';
-      c3 = '#999999';
-    } else if (r < 0.66) {
-      c1 = '#e0e0e0';
-      c2 = '#b0b0b0';
-      c3 = '#666666';
-    } else {
-      c1 = '#a0a0a0';
-      c2 = '#707070';
-      c3 = '#333333';
+    var st = Math.random() < .25;
+    if(st){
+      el.classList.add('star');
+      el.textContent = ['✦', '✧', '❄', '✵'][Math.floor(Math.random() * 4)];
     }
+    var bs = L === 0 ? 2 : L === 1 ? 5 : 9;
+    var s = bs + Math.random() * (L === 0 ? 2 : L === 1 ? 4 : 7);
+    var sp = L === 0 ? .25 : L === 1 ? .55 : .95;
+    var vy = sp + Math.random() * .35;
+    var x = Math.random() * W;
+    var y = init ? Math.random() * H : -s - Math.random() * 300;
+    var z = st ? -1 : (y < H3 ? 0 : y < H2_3 ? 1 : 2);
     
-    flake.el.style.background = `radial-gradient(circle at 35% 30%, ${c1} 0%, ${c2} 40%, ${c3} 100%)`;
+    if(!st) el.classList.add(ZONES[z]);
+    
+    var f = {
+      el: el, x: x, y: y, s: s, vy: vy, l: L, rot: Math.random() * 360,
+      rs: (Math.random() - .5) * 1.5, sp: Math.random() * Math.PI * 2,
+      ss: .006 + Math.random() * .012, sa: .3 + Math.random() * 1.4,
+      ll: 0, gf: L === 0 ? .25 : L === 1 ? .55 : 1, star: st, zone: z, lit: false
+    };
+    
+    el.style.width = s + 'px';
+    el.style.height = s + 'px';
+    if(st) el.style.fontSize = (s * 1.4) + 'px';
+    el.style.transform = 'translate3d(' + x + 'px,' + y + 'px,0) rotate(' + f.rot + 'deg)';
+    sl.appendChild(el);
+    fl.push(f);
   }
-  
-  function makeDriftFlake(f) {
+
+  function gl(f){
+    if(!iconsReady) return 0;
+    if(f.x < iMinX || f.x > iMaxX || f.y < iMinY || f.y > iMaxY) return 0;
+    for(var i = 0; i < icons.length; i++){
+      var ic = icons[i];
+      if(!ic.hover) continue;
+      var dx = f.x - ic.cx;
+      if(dx > ic.r || dx < -ic.r) continue;
+      var dy = f.y - ic.cy;
+      if(dy > ic.r || dy < -ic.r) continue;
+      var d2 = dx * dx + dy * dy;
+      if(d2 > ic.r2) continue;
+      if((ic.top && dy < 0) || (!ic.top && dy > 0)) return 1 - Math.sqrt(d2) / ic.r;
+    }
+    return 0;
+  }
+
+  function ua(f){
+    var tl = hoverCount > 0 ? gl(f) : 0;
+    if(f.ll === 0 && tl === 0){
+      if(f.star) return;
+      var nz = f.y < H3 ? 0 : f.y < H2_3 ? 1 : 2;
+      if(nz !== f.zone){
+        f.el.classList.remove(ZONES[f.zone]);
+        f.el.classList.add(ZONES[nz]);
+        f.zone = nz;
+      }
+      return;
+    }
+    f.ll += (tl - f.ll) * .22;
+    if(f.ll < .005) f.ll = 0;
+    if(f.ll > 1) f.ll = 1;
+    
+    if(f.star){
+      var lit = f.ll > .01;
+      if(lit !== f.lit){
+        if(lit) f.el.classList.add('lit');
+        else f.el.classList.remove('lit');
+        f.lit = lit;
+      }
+      return;
+    }
+    var t = f.ll;
+    if(t < .01){
+      if(f.lit){
+        f.el.style.background = '';
+        f.el.style.boxShadow = '';
+        var z2 = f.y < H3 ? 0 : f.y < H2_3 ? 1 : 2;
+        f.el.classList.add(ZONES[z2]);
+        f.zone = z2;
+        f.lit = false;
+      }
+      return;
+    }
+    if(!f.lit){
+      if(f.zone >= 0) f.el.classList.remove(ZONES[f.zone]);
+      f.lit = true;
+    }
+    f.el.style.background = 'radial-gradient(circle at 35% 30%,#fff8e8 0%,rgba(255,200,120,' + (0.5 + t * 0.4).toFixed(2) + ') ' + (40 + t * 20 | 0) + '%,rgba(255,150,60,' + (0.3 + t * 0.3).toFixed(2) + ') 100%)';
+    f.el.style.boxShadow = '0 0 ' + (6 + t * 10 | 0) + 'px rgba(255,190,100,' + (0.5 + t * 0.4).toFixed(2) + ')';
+  }
+
+  function mkd(f){
     f.el.remove();
-    
-    const drift = document.createElement('div');
-    drift.className = 'drift-flake';
-    
-    const w = f.size * (0.9 + Math.random() * 0.4);
-    const h = f.size * (0.5 + Math.random() * 0.2);
-    
-    drift.style.width = w + 'px';
-    drift.style.height = h + 'px';
-    
-    const driftHeight = Math.min(driftFlakes.length * 0.4, window.innerHeight * 0.06);
-    
-    const x = f.x;
-    const y = window.innerHeight - h - Math.random() * driftHeight;
-    
-    drift.style.transform = `translate(${x}px, ${y}px)`;
-    
-    const shade = 40 + Math.random() * 40;
-    drift.style.background = `radial-gradient(circle at 40% 30%, rgb(${shade + 30},${shade + 30},${shade + 30}) 0%, rgb(${shade},${shade},${shade}) 60%, rgb(${shade - 20},${shade - 20},${shade - 20}) 100%)`;
-    
-    driftLayer.appendChild(drift);
-    
-    driftFlakes.push({
-      el: drift,
-      x: x,
-      y: y,
-      size: w,
-      vx: 0,
-      vy: 0,
-      rotation: 0,
-      flying: false
-    });
+    if(dr.length >= 120){ var o = dr.shift(); o.el.remove(); }
+    var d = document.createElement('div');
+    d.className = 'drift-flake';
+    var w = f.s * (.9 + Math.random() * .4);
+    var h = f.s * (.5 + Math.random() * .2);
+    d.style.width = w + 'px';
+    d.style.height = h + 'px';
+    var dh = Math.min(dr.length * .3, H * .05);
+    var x = f.x, y = H - h - Math.random() * dh;
+    d.style.transform = 'translate3d(' + x + 'px,' + y + 'px,0)';
+    dl.appendChild(d);
+    dr.push({el: d, x: x, y: y, s: w});
   }
-  
-  let lastTime = performance.now();
-  
-  function animate(currentTime) {
-    const delta = Math.min((currentTime - lastTime) / 16.67, 2.5);
-    lastTime = currentTime;
-    
-    windTime += delta * 16;
-    const wind = getWind();
-    
-    const screenHeight = window.innerHeight;
-    const groundY = screenHeight - 5;
-    
-    for (let i = flakes.length - 1; i >= 0; i--) {
-      const f = flakes[i];
+
+  var lt = performance.now();
+  function an(t){
+    var dt = (t - lt) * INV_DT;
+    if(dt > 2.5) dt = 2.5;
+    lt = t;
+    wt += dt * 16;
+    if(gb > 0){ gb -= dt * .015; if(gb < 0) gb = 0; }
+    var wind = Math.sin(wt * .001) * .6 * wd * gm + gb * gbd * 1.5;
+    var gy = H - 5;
+    var doFinite = ((frameCount & 15) === 0);
+    frameCount++;
+    var skip = isMobile && ((frameCount & 1) === 0);
+
+    for(var i = fl.length - 1; i >= 0; i--){
+      var f = fl[i];
+      f.y += f.vy * dt;
+      f.sp += f.ss * dt;
+      var sway = Math.sin(f.sp) * f.sa;
+      var ge = gb > 0 ? gbd * gb * 8 * f.gf : 0;
+      f.x += (wind * (f.l + 1) * .4 + sway + ge) * dt;
+      f.rot += f.rs * dt;
       
-      f.y += f.vy * delta;
+      if(f.x < -50) f.x = W + 50 - ((f.x + 50) % (W + 100));
+      else if(f.x > W + 50) f.x = -50 + ((f.x - 50) % (W + 100));
       
-      f.swayPhase += f.swaySpeed * delta;
-      const sway = Math.sin(f.swayPhase) * f.swayAmount;
-      f.x += (wind * (f.layer + 1) * 0.5 + sway) * delta;
+      if(f.rot > 720) f.rot -= 720;
+      else if(f.rot < -720) f.rot += 720;
       
-      f.rotation += f.rotationSpeed * delta;
+      if(!skip || f.l === 2) ua(f);
+      f.el.style.transform = 'translate3d(' + f.x.toFixed(1) + 'px,' + f.y.toFixed(1) + 'px,0) rotate(' + (f.rot | 0) + 'deg)';
       
-      f.wrapX();
-      
-      const heightRatio = f.y / screenHeight;
-      if (Math.floor(heightRatio * 10) !== Math.floor((f.y - f.vy * delta) / screenHeight * 10)) {
-        updateFlakeAppearance(f, heightRatio);
-      }
-      
-      f.el.style.transform = `translate(${f.x}px, ${f.y}px) rotate(${f.rotation}deg)`;
-      
-      if (f.y >= groundY) {
-        makeDriftFlake(f);
-        flakes.splice(i, 1);
-        createFlake();
-      }
-      
-      if (!isFinite(f.y) || !isFinite(f.x)) {
+      if(f.y >= gy){
+        mkd(f);
+        fl.splice(i, 1);
+        mk();
+      } else if(doFinite && (!isFinite(f.y) || !isFinite(f.x))){
         f.el.remove();
-        flakes.splice(i, 1);
-        createFlake();
+        fl.splice(i, 1);
+        mk();
       }
     }
-    
-    requestAnimationFrame(animate);
+    if((frameCount & 31) === 0) updateDims();
+    requestAnimationFrame(an);
   }
-  
-  function blowDrift() {
-    if (driftFlakes.length === 0) return;
+
+  function bw(){
+    if(dr.length === 0) return;
+    var dir = Math.random() > .5 ? 1 : -1;
+    var str = .8 + Math.random() * .7;
+    gbd = dir; gb = 1; gm = 3;
+    setTimeout(function(){ gm = 1; }, 2000);
     
-    const direction = Math.random() > 0.5 ? 1 : -1;
-    const strength = 0.8 + Math.random() * 0.7;
-    
-    gustMultiplier = 3;
-    setTimeout(() => { gustMultiplier = 1; }, 2000);
-    
-    driftFlakes.forEach((d, index) => {
-      d.flying = true;
-      
-      const delay = index * 5 + Math.random() * 30;
-      
-      d.vx = direction * (5 + Math.random() * 8) * strength;
-      d.vy = -(3 + Math.random() * 6) * strength;
-      d.rotation = (Math.random() - 0.5) * 20;
-      
-      setTimeout(() => {
-        const endX = d.x + d.vx * 150 + (Math.random() - 0.5) * 200;
-        const endY = d.y + d.vy * 100 - Math.random() * 300;
-        const endRotation = (Math.random() - 0.5) * 900;
-        const endScale = 0.3 + Math.random() * 0.4;
-        
-        d.el.style.transform = `translate(${endX}px, ${endY}px) rotate(${endRotation}deg) scale(${endScale})`;
-        d.el.style.opacity = '0';
-        
-        setTimeout(() => {
-          d.el.remove();
-          const idx = driftFlakes.indexOf(d);
-          if (idx > -1) driftFlakes.splice(idx, 1);
-        }, 1600);
-      }, delay);
-    });
+    for(var k = 0; k < dr.length; k++){
+      (function(d, idx){
+        var delay = idx * 5 + Math.random() * 30;
+        var vx = dir * (5 + Math.random() * 8) * str;
+        var vy = -(3 + Math.random() * 6) * str;
+        setTimeout(function(){
+          var ex = d.x + vx * 150 + (Math.random() - .5) * 200;
+          var ey = d.y + vy * 100 - Math.random() * 300;
+          var er = (Math.random() - .5) * 900;
+          var es = .3 + Math.random() * .4;
+          d.el.style.transform = 'translate3d(' + ex + 'px,' + ey + 'px,0) rotate(' + er + 'deg) scale(' + es + ')';
+          d.el.style.opacity = '0';
+          setTimeout(function(){
+            d.el.remove();
+            var ix = dr.indexOf(d);
+            if(ix > -1) dr.splice(ix, 1);
+          }, 1600);
+        }, delay);
+      })(dr[k], k);
+    }
   }
+
+  for(var i = 0; i < C; i++) mk(true);
+  requestAnimationFrame(an);
   
-  for (let i = 0; i < FLAKE_COUNT; i++) {
-    createFlake(true);
+  function sch(){
+    var d = Math.random() * 10000 + 12000;
+    setTimeout(function(){ bw(); sch(); }, d);
   }
+  sch();
   
-  requestAnimationFrame(animate);
-  
-  function scheduleBlow() {
-    const delay = Math.random() * 8000 + 10000;
-    setTimeout(() => {
-      blowDrift();
-      scheduleBlow();
-    }, delay);
-  }
-  scheduleBlow();
-  
-  setInterval(() => {
-    windDirection *= -1;
-  }, 15000);
-  
+  setInterval(function(){ wd = -wd; }, 15000);
+  document.addEventListener('visibilitychange', function(){
+    if(document.hidden) lt = performance.now();
+  });
+})();
+
 })();
 </script>
-
 </body>
 </html>
